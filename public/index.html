@@ -12,14 +12,15 @@
         <h2 class="text-center">kihle's tempChat</h2>
         <h4 class="text-center">no logs, no nothing</h4>
         
-        <div id="chatbox" class="border rounded p-3 mb-3" style="height: auto; max-height: 300px; overflow-y: auto;"></div>
+        <div id="chatbox" class="border rounded p-3 mb-3" style="height: auto; overflow-y: auto;"></div>
         
         <div class="input-group mb-3">
             <input type="text" id="messageInput" class="form-control" placeholder="Type your message...">
-            <button class="btn btn-primary btn-lg">Send</button>
-            <button class="btn btn-danger btn-lg">Clear</button>
+            <button class="btn btn-primary btn-lg" onclick="sendMessage()">Send</button>
+            <button class="btn btn-danger btn-lg" onclick="quitChat()">Clear</button>
         </div>
     </div>
+
 
     <script>
         let ws = new WebSocket("ws://localhost:6969/ws");

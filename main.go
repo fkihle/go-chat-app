@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strings"
 	"sync"
-	"unicode"
 
 	"github.com/gorilla/websocket"
 )
@@ -23,6 +22,7 @@ type Chatter struct {
 var (
 	chatters = make(map[*Chatter]bool)
 	mutex    = &sync.Mutex{}
+	count    = 0
 )
 
 var upgrader = websocket.Upgrader{
@@ -30,18 +30,6 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 	// Add CheckOrigin function if necessary for CORS
 	CheckOrigin: func(r *http.Request) bool { return true },
-}
-
-// ######################################################################
-// function: cleanInput()
-// ######################################################################
-func cleanInput(input string) string {
-	return strings.Map(func(r rune) rune {
-		if unicode.IsPrint(r) {
-			return r
-		}
-		return -1
-	}, input)
 }
 
 // ######################################################################
@@ -59,15 +47,19 @@ func handleConnection(w http.ResponseWriter, r *http.Request) {
 	chatter := &Chatter{conn: ws, username: "Ballz"}
 	mutex.Lock()
 	chatters[chatter] = true
+	count++
+	broadcastUserCount() // Broadcast user count after new connection
 	mutex.Unlock()
 
 	ws.WriteMessage(websocket.TextMessage, []byte("Velkommen til kihle's tempChat.\n"))
 	ws.WriteMessage(websocket.TextMessage, []byte("Bytt brukernavn med: /u <ditt_brukernavn>\n"))
-	ws.WriteMessage(websocket.TextMessage, []byte("Forlat chat med: /q\n"))
+	ws.WriteMessage(websocket.TextMessage, []byte("Forlat/clear chat med: /q\n"))
 	// defer closing connection and deleting chatters til end of function
 	defer func() {
 		mutex.Lock()
 		delete(chatters, chatter)
+		count--
+		broadcastUserCount() // Broadcast user count after lost connection
 		mutex.Unlock()
 	}()
 
@@ -107,6 +99,20 @@ func handleConnection(w http.ResponseWriter, r *http.Request) {
 
 	// Once the loop exits, the client has disconnected
 	broadcast(fmt.Sprintf("%s has left the chat.", chatter.username), nil)
+}
+
+// ######################################################################
+// function: broadcastUserCount()
+// ######################################################################
+func broadcastUserCount() {
+	message := fmt.Sprintf("UC%d", count)
+	for chatter := range chatters {
+		err := chatter.conn.WriteMessage(websocket.TextMessage, []byte(message))
+		if err != nil {
+			log.Printf("Error broadcasting user count: %v", err)
+			continue
+		}
+	}
 }
 
 // ######################################################################

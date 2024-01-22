@@ -11,7 +11,7 @@
     <div class="flexbox container mt-3">
         <h2 class="text-center">kihle's tempChat</h2>
         <h4 class="text-center">no logs, no nothing</h4>
-        
+
         <div id="chatbox" class="border rounded p-3 mb-3" style="height: auto; overflow-y: auto;"></div>
         
         <div class="input-group mb-3">
@@ -19,16 +19,28 @@
             <button class="btn btn-primary btn-lg" onclick="sendMessage()">Send</button>
             <button class="btn btn-danger btn-lg" onclick="quitChat()">Clear</button>
         </div>
+        <div>Users online: <span class="userCount"></span></div>
     </div>
 
 
     <script>
         let ws = new WebSocket("ws://localhost:6969/ws");
         ws.onmessage = function(event) {
-            let messages = document.querySelector('#chatbox');
-            let newMessage = document.createElement('div'); // create new div element
-            newMessage.textContent = event.data;  // Set its text content
-            messages.appendChild(newMessage);
+            data = event.data;
+            
+            if (data[0] == "U" && data[1] == "C") {
+                // Update the display of connected users
+                if (event.data.length == 4){
+                    document.querySelector(".userCount").textContent = event.data[2] + event.data[3];;
+                } else {
+                    document.querySelector(".userCount").textContent = event.data[2];
+                }
+            } else {
+                let messages = document.querySelector('#chatbox');
+                let newMessage = document.createElement('div'); // create new div element
+                newMessage.textContent = event.data;  // Set its text content
+                messages.appendChild(newMessage);
+            }
         };
 
         function sendMessage() {

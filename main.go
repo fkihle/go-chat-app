@@ -138,5 +138,5 @@ func main() {
 	http.Handle("/", fs)
 
 	fmt.Println("WebSocket server started on port 6969")
-	log.Fatal(http.ListenAndServe("localhost:6969", nil))
+	log.Fatal(http.ListenAndServe("https://go-chat-app-0192827617c6.herokuapp.com", nil))
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 	"unicode"
@@ -137,6 +138,12 @@ func main() {
 	fs := http.FileServer(http.Dir("public"))
 	http.Handle("/", fs)
 
-	fmt.Println("WebSocket server started on port 6969")
-	log.Fatal(http.ListenAndServe("https://go-chat-app-0192827617c6.herokuapp.com", nil))
+	// Get the port number from the environment variable
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
+
+	fmt.Printf("WebSocket server started on port %s\n", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

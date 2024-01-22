@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 	"sync"
 	"unicode"
@@ -57,12 +56,12 @@ func handleConnection(w http.ResponseWriter, r *http.Request) {
 	defer ws.Close()
 
 	// Create a new chatter and add to the chatters map
-	chatter := &Chatter{conn: ws, username: "dorkiBallz"}
+	chatter := &Chatter{conn: ws, username: "Ballz"}
 	mutex.Lock()
 	chatters[chatter] = true
 	mutex.Unlock()
 
-	ws.WriteMessage(websocket.TextMessage, []byte("Velkommen til chat.\n"))
+	ws.WriteMessage(websocket.TextMessage, []byte("Velkommen til kihle's tempChat.\n"))
 	ws.WriteMessage(websocket.TextMessage, []byte("Bytt brukernavn med: /u <ditt_brukernavn>\n"))
 	ws.WriteMessage(websocket.TextMessage, []byte("Forlat chat med: /q\n"))
 	// defer closing connection and deleting chatters til end of function
@@ -138,12 +137,6 @@ func main() {
 	fs := http.FileServer(http.Dir("public"))
 	http.Handle("/", fs)
 
-	// Get the port number from the environment variable
-	port := os.Getenv("PORT")
-	if port == "" {
-		log.Fatal("$PORT must be set")
-	}
-
-	fmt.Printf("WebSocket server started on port %s\n", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	fmt.Printf("WebSocket server started on port 6969\n")
+	log.Fatal(http.ListenAndServe(":6969", nil))
 }

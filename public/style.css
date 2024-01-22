@@ -1,0 +1,44 @@
+@media (max-width: 768px) {
+    .flexbox {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    #chatbox {
+        width: 90vw;
+        min-height: 400px;
+        max-height: 80vh;
+    }
+}
+
+@media (max-width: 1200px) {
+    .flexbox {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    #chatbox {
+        width: 90vw;
+        min-height: 40vh;
+        max-height: 80vh;
+    }
+}
+
+@media (min-width: 1201px) {
+    .flexbox {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    #chatbox {
+        width: 90vw;
+        min-height: 40vh;
+        max-height: 80vh;
+    }
+}

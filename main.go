@@ -44,7 +44,7 @@ func handleConnection(w http.ResponseWriter, r *http.Request) {
 	defer ws.Close()
 
 	// Create a new chatter and add to the chatters map
-	chatter := &Chatter{conn: ws, username: "Ballz"}
+	chatter := &Chatter{conn: ws, username: "NoName"}
 	mutex.Lock()
 	chatters[chatter] = true
 	count++
